@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building Intelligence Reports â Neuro Building Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #F5821F;
+    --orange-dark: #d96c10;
+    --orange-glow: rgba(245,130,31,0.18);
+    --cyan: #00D4FF;
+    --cyan-dim: rgba(0,212,255,0.15);
+    --cyan-border: rgba(0,212,255,0.3);
+    --white: #ffffff;
+    --off-white: #e8edf5;
+    --muted: #8b96a8;
+    --dark-surface: #050d1a;
+    --card-bg: rgba(8,18,38,0.85);
+    --card-border: rgba(0,212,255,0.12);
+    --grid-line: rgba(0,212,255,0.06);
+    --font: 'Barlow', sans-serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: #030912;
+    color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── ANIMATED NETWORK CANVAS ── */
+  #network-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* ── LAYOUT ── */
+  .section { position: relative; z-index: 1; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 32px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(3,9,18,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,212,255,0.1);
+  }
+
+  .nav-logo { display: flex; align-items: center; text-decoration: none; }
+
+  .nav-logo img {
+    height: 44px;
+    width: auto;
+    background: #fff;
+    border-radius: 6px;
+    padding: 5px 10px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--off-white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-sep { color: rgba(255,255,255,0.2); }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--orange);
+    color: #fff;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 11px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+  .btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: var(--cyan);
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 11px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: 1px solid var(--cyan);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { background: var(--cyan-dim); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 32px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cyan-dim);
+    border: 1px solid var(--cyan-border);
+    border-radius: 2px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 32px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: clamp(42px, 6vw, 80px);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .accent { color: var(--orange); }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--off-white);
+    max-width: 560px;
+    margin-bottom: 48px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 72px; }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    max-width: 680px;
+    background: rgba(0,212,255,0.12);
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--cyan-border);
+  }
+
+  .stat-block {
+    background: rgba(5,13,26,0.95);
+    padding: 24px 28px;
+    position: relative;
+  }
+
+  .stat-block::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--orange);
+  }
+
+  .stat-block:nth-child(2)::after { background: #ff4444; }
+  .stat-block:nth-child(3)::after { background: var(--cyan); }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: 36px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-block:nth-child(1) .stat-value { color: var(--orange); }
+  .stat-block:nth-child(2) .stat-value { color: #ff6b6b; }
+  .stat-block:nth-child(3) .stat-value { color: var(--cyan); }
+
+  .stat-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    border: 1px solid var(--cyan-border);
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .section-title .accent { color: var(--orange); }
+
+  .section-subtitle {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 16px auto 0;
+    line-height: 1.6;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+    margin: 0;
+  }
+
+  /* ── PROBLEM SECTION ── */
+  .problem-section {
+    padding: 100px 32px;
+    background: rgba(0,8,20,0.6);
+  }
+
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .pain-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.2s;
+  }
+
+  .pain-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateY(-3px);
+  }
+
+  .pain-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), transparent);
+  }
+
+  .pain-icon {
+    width: 48px; height: 48px;
+    background: var(--orange-glow);
+    border: 1px solid rgba(245,130,31,0.3);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .pain-icon svg { width: 24px; height: 24px; stroke: var(--orange); fill: none; stroke-width: 1.8; }
+
+  .pain-card h3 {
+    font-family: var(--font-cond);
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+
+  .pain-card p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .pain-card p strong { color: var(--off-white); font-weight: 600; }
+
+  /* ── REPORTS SECTION ── */
+  .reports-section {
+    padding: 100px 32px;
+  }
+
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .report-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, border-color 0.3s;
+    position: relative;
+  }
+
+  .report-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,212,255,0.3);
+  }
+
+  .report-card.featured {
+    border-color: var(--orange);
+    border-width: 1px;
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: var(--orange);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .report-header {
+    padding: 32px 28px 24px;
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    position: relative;
+  }
+
+  .report-tier {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 10px;
+  }
+
+  .report-name {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin-bottom: 6px;
+  }
+
+  .report-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .report-price-block {
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(0,212,255,0.08);
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .report-price {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--white);
+  }
+
+  .report-price-label {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .report-features {
+    padding: 24px 28px;
+    flex: 1;
+    list-style: none;
+  }
+
+  .report-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--off-white);
+    line-height: 1.5;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .report-features li:last-child { border-bottom: none; }
+
+  .feat-check {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .report-cta {
+    padding: 20px 28px 28px;
+  }
+
+  .report-cta a {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .cta-orange {
+    background: var(--orange);
+    color: #fff;
+  }
+  .cta-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+  .cta-outline-cyan {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+  }
+  .cta-outline-cyan:hover { background: var(--cyan-dim); transform: translateY(-1px); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    padding: 100px 32px;
+    background: rgba(0,8,20,0.5);
+  }
+
+  .steps-track {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .steps-connector {
+    position: absolute;
+    top: 32px;
+    left: calc(12.5% + 16px);
+    right: calc(12.5% + 16px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--orange), var(--cyan));
+    z-index: 0;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .step-num {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: 22px;
+    margin-bottom: 20px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .step-item:nth-child(1) .step-num { background: rgba(245,130,31,0.15); border: 2px solid var(--orange); color: var(--orange); }
+  .step-item:nth-child(2) .step-num { background: rgba(245,130,31,0.08); border: 2px solid rgba(245,130,31,0.5); color: var(--orange); }
+  .step-item:nth-child(3) .step-num { background: rgba(0,212,255,0.08); border: 2px solid rgba(0,212,255,0.5); color: var(--cyan); }
+  .step-item:nth-child(4) .step-num { background: rgba(0,212,255,0.15); border: 2px solid var(--cyan); color: var(--cyan); }
+
+  .step-title {
+    font-family: var(--font-cond);
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── FINAL CTA ── */
+  .cta-section {
+    padding: 100px 32px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-box {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border: 1px solid var(--cyan-border);
+    border-radius: 10px;
+    padding: 64px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--cyan));
+  }
+
+  .cta-box h2 {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 48px);
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .cta-box p {
+    font-size: 17px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .cta-box .btn-primary {
+    font-size: 16px;
+    padding: 16px 40px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px 32px;
+    border-top: 1px solid rgba(0,212,255,0.08);
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--cyan); }
+
+  .footer-copy {
+    font-size: 12px;
+    color: rgba(139,150,168,0.5);
+    text-align: right;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .pain-grid { grid-template-columns: 1fr; }
+    .reports-grid { grid-template-columns: 1fr; max-width: 480px; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-connector { display: none; }
+    .hero-stats { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+    .footer-copy { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="network-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="neuro-logo.png" alt="Neuro Building Systems">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">The Problem</a></li>
+    <li class="nav-sep">|</li>
+    <li><a href="#reports">Reports</a></li>
+    <li class="nav-sep">|</li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li class="nav-sep">|</li>
+    <li><a href="https://tally.so/r/GxQVXk" class="btn-primary">Order a Report</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero section">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">NYC Building Intelligence</div>
+    <h1>Your building is<br><span class="accent">costing you money.</span><br>Find out exactly how much.</h1>
+    <p class="hero-sub">Neuro's Building Intelligence Reports expose your LL97 fine exposure, energy waste, and missed savings — with a clear roadmap to fix it.</p>
+    <div class="hero-actions">
+      <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Report</a>
+      <a href="#reports" class="btn-outline">See Report Options</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-block">
+        <div class="stat-label">Current LL97 Fines</div>
+        <div class="stat-value">$66,900</div>
+        <div class="stat-desc">Annual penalty exposure today</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">Fines by 2030</div>
+        <div class="stat-value">$114,300</div>
+        <div class="stat-desc">As thresholds tighten next cycle</div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-label">vs. NYC Median</div>
+        <div class="stat-value">2.4×</div>
+        <div class="stat-desc">Above median energy intensity</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROBLEM -->
+<section class="problem-section section" id="problem">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">The Problem</div>
+      <h2 class="section-title">Your building is bleeding<br><span class="accent">money and compliance risk.</span></h2>
+      <p class="section-subtitle">Most NYC building owners have no idea what they're actually liable for — until a fine arrives.</p>
+    </div>
+
+    <div class="pain-grid">
+
+      <div class="pain-card">
+        <div class="pain-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>LL97 Fines Are Already Here</h3>
+        <p>Local Law 97 carbon penalties took effect in 2024. Buildings over 25,000 sq ft face <strong>$268 per ton of CO₂</strong> over the limit — every single year. Most owners don't know their current exposure or when the next threshold kicks in.</p>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h3>Energy Waste You Can't See</h3>
+        <p>The average NYC commercial building wastes <strong>30–40% of its energy</strong> through inefficient HVAC, poor controls, and equipment running on outdated schedules. Without a proper audit, that waste just compounds — invisibly.</p>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>The 2030 Cliff is Approaching</h3>
+        <p>LL97 tightens again in 2030 with limits dropping <strong>40% below 2024 levels</strong>. Buildings that don't act now will face massive retrofit costs under deadline pressure — paying 3× more than those who plan ahead.</p>
+      </div>
+
+      <div class="pain-card">
+        <div class="pain-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>No Clear Roadmap to Fix It</h3>
+        <p>Most building owners get a vague energy audit that lists problems but offers <strong>no prioritization, no ROI analysis, and no contractor-ready specs.</strong> The result: a binder that collects dust while fines keep accruing.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- REPORTS -->
+<section class="reports-section section" id="reports">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Report Options</div>
+      <h2 class="section-title">Intelligence at every<br><span class="accent">scale and budget.</span></h2>
+      <p class="section-subtitle">From a single building snapshot to a full portfolio analysis — delivered in 5 business days.</p>
+    </div>
+
+    <div class="reports-grid">
+
+      <!-- Snapshot -->
+      <div class="report-card">
+        <div class="report-header">
+          <div class="report-tier">Entry — Single Building</div>
+          <div class="report-name">Snapshot Report</div>
+          <div class="report-tagline">Your building's energy profile, LL97 exposure, and top 3 opportunities in 15 pages.</div>
+        </div>
+        <div class="report-price-block">
+          <div class="report-price">$497</div>
+          <div class="report-price-label">one-time</div>
+        </div>
+        <ul class="report-features">
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Energy benchmarking vs. NYC peers
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            LL97 fine exposure (2024 + 2030)
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Top 3 improvement opportunities with ROI
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            6–24 month action roadmap
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Available incentive &amp; rebate overview
+          </li>
+        </ul>
+        <div class="report-cta">
+          <a href="https://tally.so/r/GxQVXk" class="cta-outline-cyan">Order Snapshot →</a>
+        </div>
+      </div>
+
+      <!-- Portfolio Benchmark -->
+      <div class="report-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="report-header">
+          <div class="report-tier">Portfolio — 2 to 20 Buildings</div>
+          <div class="report-name">Portfolio Benchmark</div>
+          <div class="report-tagline">Cross-portfolio comparison, ranked LL97 exposure, and a capital prioritization plan.</div>
+        </div>
+        <div class="report-price-block">
+          <div class="report-price">$1,997</div>
+          <div class="report-price-label">one-time</div>
+        </div>
+        <ul class="report-features">
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Everything in Snapshot, across all buildings
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            LL97 fine exposure ranked by building
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Capital prioritization across the portfolio
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Aggregated incentive &amp; financing options
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Portfolio-level action plan &amp; timeline
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(245,130,31,0.2)"/><path d="M5 9l3 3 5-5" stroke="#F5821F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            30-min strategy call with Neuro team
+          </li>
+        </ul>
+        <div class="report-cta">
+          <a href="https://tally.so/r/GxQVXk" class="cta-orange">Order Portfolio Benchmark →</a>
+        </div>
+      </div>
+
+      <!-- Deep-Dive -->
+      <div class="report-card">
+        <div class="report-header">
+          <div class="report-tier">Premium — Single Building</div>
+          <div class="report-name">Deep-Dive Report</div>
+          <div class="report-tagline">ASHRAE Level 2 equivalent — contractor-ready specs, full financial model, performance contract framework.</div>
+        </div>
+        <div class="report-price-block">
+          <div class="report-price">$4,997</div>
+          <div class="report-price-label">one-time</div>
+        </div>
+        <ul class="report-features">
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Full ASHRAE Level 2 scoping equivalent
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Contractor-ready implementation specs
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Detailed financial model (NPV, IRR, payback)
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Performance contract framework (EPC/ESA)
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Incentive stacking strategy (NYSERDA, Con Ed)
+          </li>
+          <li>
+            <svg class="feat-check" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="rgba(0,212,255,0.15)"/><path d="M5 9l3 3 5-5" stroke="#00D4FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            60-min executive briefing with lead engineer
+          </li>
+        </ul>
+        <div class="report-cta">
+          <a href="https://tally.so/r/GxQVXk" class="cta-outline-cyan">Order Deep-Dive →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section section" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Process</div>
+      <h2 class="section-title">From order to<br><span class="accent">intelligence in 5 days.</span></h2>
+      <p class="section-subtitle">No site visit required. We work from your utility data, ENERGY STAR Portfolio Manager records, and publicly available building data.</p>
+    </div>
+
+    <div class="steps-track">
+      <div class="steps-connector"></div>
+      <div class="steps-grid">
+
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-title">Order &amp; Submit</div>
+          <p class="step-desc">Complete the order form with your building address and basic utility account info. Takes 5 minutes.</p>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-title">Data Collection</div>
+          <p class="step-desc">Our team pulls public records, utility benchmarking data, and LL97 filings to model your building's performance.</p>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-title">Analysis &amp; Modeling</div>
+          <p class="step-desc">Neuro engineers run your building through our compliance models to quantify fine exposure and savings opportunities.</p>
+        </div>
+
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-title">Report Delivered</div>
+          <p class="step-desc">You receive a PDF report and (for Portfolio and Deep-Dive) a call to walk through findings and next steps.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FINAL CTA -->
+<section class="cta-section section">
+  <div class="cta-box">
+    <h2>Stop guessing.<br><span style="color: var(--orange);">Start knowing.</span></h2>
+    <p>Every month without a report is another month paying fines you might not owe — or missing savings that are sitting right inside your building.</p>
+    <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Building Intelligence Report</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <a href="#" class="footer-logo">
+      <img src="neuro-logo.png" alt="Neuro Building Systems" style="height:36px;width:auto;background:#fff;border-radius:6px;padding:4px 8px;">
+    </a>
+    <ul class="footer-links">
+      <li><a href="#">Solutions</a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Partners</a></li>
+      <li><a href="#">Integrations</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="https://tally.so/r/GxQVXk">Order a Report</a></li>
+    </ul>
+    <div class="footer-copy">
+      &copy; 2026 Neuro Building Systems.<br>All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+const canvas = document.getElementById('network-canvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, nodes = [], edges = [];
+const NODE_COUNT = 60;
+const CONNECT_DIST = 160;
+const ORANGE = 'rgba(245,130,31,';
+const CYAN = 'rgba(0,212,255,';
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function init() {
+  nodes = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 2 + 1.5,
+      color: Math.random() > 0.6 ? 'orange' : 'cyan'
+    });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < CONNECT_DIST) {
+        const alpha = (1 - dist / CONNECT_DIST) * 0.55;
+        const base = nodes[i].color === 'orange' ? ORANGE : CYAN;
+        ctx.strokeStyle = base + alpha + ')';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  for (const n of nodes) {
+    const base = n.color === 'orange' ? ORANGE : CYAN;
+    ctx.fillStyle = base + '0.9)';
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fill();
+
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < -20) n.x = W + 20;
+    if (n.x > W + 20) n.x = -20;
+    if (n.y < -20) n.y = H + 20;
+    if (n.y > H + 20) n.y = -20;
+  }
+
+  requestAnimationFrame(draw);
+}
+
+resize();
+init();
+draw();
+window.addEventListener('resize', () => { resize(); init(); });
+</script>
+</body>
+</html>
