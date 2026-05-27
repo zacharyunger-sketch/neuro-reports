@@ -84,9 +84,6 @@
   .nav-logo img {
     height: 44px;
     width: auto;
-    background: #fff;
-    border-radius: 6px;
-    padding: 5px 10px;
   }
 
   .nav-links {
@@ -694,6 +691,204 @@
     text-align: right;
   }
 
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(3,9,18,0.88);
+    backdrop-filter: blur(6px);
+    overflow-y: auto;
+    padding: 40px 16px;
+  }
+  .modal-overlay.open { display: block; }
+
+  .modal-box {
+    background: #0B1F3A;
+    border: 1px solid rgba(30,170,255,0.25);
+    border-radius: 12px;
+    padding: 48px 40px 40px;
+    max-width: 580px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 26px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    transition: color 0.2s;
+    font-family: var(--font);
+  }
+  .modal-close:hover { color: var(--white); }
+
+  .modal-logo {
+    display: block;
+    max-width: 160px;
+    margin: 0 auto 24px;
+  }
+
+  .modal-title {
+    font-family: var(--font-cond);
+    font-weight: 800;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .modal-subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .modal-divider {
+    height: 1px;
+    background: rgba(30,170,255,0.1);
+    margin: 20px 0;
+  }
+
+  .modal-field {
+    margin-bottom: 16px;
+  }
+
+  .modal-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .modal-field label .req { color: var(--orange); margin-left: 2px; }
+
+  .modal-field input,
+  .modal-field select,
+  .modal-field textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(30,170,255,0.2);
+    border-radius: 4px;
+    padding: 11px 14px;
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .modal-field input:focus,
+  .modal-field select:focus,
+  .modal-field textarea:focus {
+    border-color: rgba(30,170,255,0.6);
+    background: rgba(255,255,255,0.07);
+  }
+
+  .modal-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b96a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-color: rgba(255,255,255,0.05);
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  .modal-field select option { background: #0B1F3A; color: var(--white); }
+  .modal-field textarea { resize: vertical; min-height: 88px; }
+  .modal-field input::placeholder,
+  .modal-field textarea::placeholder { color: rgba(139,150,168,0.45); }
+
+  .modal-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+    background: rgba(245,130,31,0.06);
+    border: 1px solid rgba(245,130,31,0.2);
+    border-radius: 4px;
+    padding: 14px 16px;
+  }
+
+  .modal-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--orange);
+    cursor: pointer;
+  }
+
+  .modal-checkbox label {
+    font-size: 13px;
+    color: var(--off-white);
+    line-height: 1.5;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .modal-submit {
+    width: 100%;
+    background: #F5821F;
+    color: #fff;
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .modal-submit:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  .modal-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .modal-form-error {
+    font-size: 13px;
+    color: #ff6b6b;
+    text-align: center;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* ── HERO SUCCESS MESSAGE ── */
+  .hero-success {
+    display: none;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 6px;
+    padding: 16px 24px;
+    font-size: 16px;
+    color: var(--cyan);
+    font-weight: 500;
+    margin-bottom: 24px;
+    max-width: 560px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    .modal-box { padding: 40px 20px 32px; }
+  }
+
   /* ── STAT EXAMPLE NOTE ── */
   .stat-example {
     font-size: 10px;
@@ -870,7 +1065,7 @@
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
-    <img src="neuro-logo.png" alt="Neuro Building Systems">
+    <img src="neuro-logo-transparent.png" alt="Neuro Building Systems">
   </a>
   <ul class="nav-links">
     <li><a href="#problem">The Problem</a></li>
@@ -879,7 +1074,7 @@
     <li class="nav-sep">|</li>
     <li><a href="#how-it-works">How It Works</a></li>
     <li class="nav-sep">|</li>
-    <li><a href="https://tally.so/r/GxQVXk" class="btn-primary">Order a Report</a></li>
+    <li><a href="#" onclick="openModal(''); return false;" class="btn-primary">Order a Report</a></li>
   </ul>
 </nav>
 
@@ -889,8 +1084,9 @@
     <div class="hero-eyebrow">Building Intelligence</div>
     <h1>Your building is<br><span class="accent">costing you money.</span><br>Find out exactly how much.</h1>
     <p class="hero-sub">Neuro's Building Intelligence Reports expose your energy compliance fine exposure, energy waste, and missed savings, with a clear roadmap to fix it.</p>
+    <div id="hero-success" class="hero-success">Thank you, we will be in touch within one business day.</div>
     <div class="hero-actions">
-      <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Report</a>
+      <a href="#" onclick="openModal(''); return false;" class="btn-primary">Order Your Report</a>
       <a href="#reports" class="btn-outline">See Report Options</a>
       <a href="INSERT_SAMPLE_URL" class="btn-outline">Download Sample Report</a>
     </div>
@@ -1011,7 +1207,7 @@
           </li>
         </ul>
         <div class="report-cta">
-          <a href="https://tally.so/r/GxQVXk" class="cta-outline-cyan">Order Snapshot →</a>
+          <a href="#" onclick="openModal('snapshot'); return false;" class="cta-outline-cyan">Order Snapshot →</a>
           <a href="https://drive.google.com/file/d/1-wN0Z5G5N2lrJzh14p1Fs_QLmfaPpIzP/view?usp=sharing" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--cyan);text-decoration:none;">↓ Download a sample report</a>
         </div>
       </div>
@@ -1055,7 +1251,7 @@
           </li>
         </ul>
         <div class="report-cta">
-          <a href="https://tally.so/r/GxQVXk" class="cta-orange">Order Portfolio Benchmark →</a>
+          <a href="#" onclick="openModal('portfolio'); return false;" class="cta-orange">Order Portfolio Benchmark →</a>
         </div>
       </div>
 
@@ -1097,7 +1293,7 @@
           </li>
         </ul>
         <div class="report-cta">
-          <a href="https://tally.so/r/GxQVXk" class="cta-outline-cyan">Order Deep-Dive →</a>
+          <a href="#" onclick="openModal('deepdive'); return false;" class="cta-outline-cyan">Order Deep-Dive →</a>
         </div>
       </div>
 
@@ -1213,7 +1409,7 @@
       </ul>
     </div>
 
-    <p class="compliance-note">Don't see your city? <a href="https://tally.so/r/GxQVXk">Contact us.</a> Local requirements may still apply to your building.</p>
+    <p class="compliance-note">Don't see your city? <a href="#" onclick="openModal(''); return false;">Contact us.</a> Local requirements may still apply to your building.</p>
   </div>
 </section>
 
@@ -1224,7 +1420,7 @@
   <div class="cta-box">
     <h2>Stop guessing.<br><span style="color: var(--orange);">Start knowing.</span></h2>
     <p>Every month without a report is another month paying fines you might not owe, or missing savings that are sitting right inside your building.</p>
-    <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Building Intelligence Report</a>
+    <a href="#" onclick="openModal(''); return false;" class="btn-primary">Order Your Building Intelligence Report</a>
   </div>
 </section>
 
@@ -1232,7 +1428,7 @@
 <footer>
   <div class="footer-inner">
     <a href="#" class="footer-logo">
-      <img src="neuro-logo.png" alt="Neuro Building Systems" style="height:36px;width:auto;background:#fff;border-radius:6px;padding:4px 8px;">
+      <img src="neuro-logo-transparent.png" alt="Neuro Building Systems" style="height:36px;width:auto;">
     </a>
     <ul class="footer-links">
       <li><a href="#">Solutions</a></li>
@@ -1240,13 +1436,133 @@
       <li><a href="#">Partners</a></li>
       <li><a href="#">Integrations</a></li>
       <li><a href="#">Contact</a></li>
-      <li><a href="https://tally.so/r/GxQVXk">Order a Report</a></li>
+      <li><a href="#" onclick="openModal(''); return false;">Order a Report</a></li>
     </ul>
     <div class="footer-copy">
       &copy; 2026 Neuro Building Systems.<br>All rights reserved.
     </div>
   </div>
 </footer>
+
+<!-- ORDER MODAL -->
+<div id="order-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <img src="neuro-logo-transparent.png" alt="Neuro Building Systems" class="modal-logo">
+    <h2 id="modal-title" class="modal-title">Order Your Building<br>Intelligence Report</h2>
+    <p class="modal-subtitle">Fill out the form below. We'll review your submission and send an invoice within one business day.</p>
+
+    <form id="order-form" action="https://formspree.io/f/xqejwpvg" method="POST">
+
+      <div class="modal-field">
+        <label for="f-name">Your full name <span class="req">*</span></label>
+        <input type="text" id="f-name" name="Full Name" required placeholder="Jane Smith">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-email">Your email address <span class="req">*</span></label>
+        <input type="email" id="f-email" name="Email" required placeholder="jane@company.com">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-phone">Your phone number</label>
+        <input type="text" id="f-phone" name="Phone" placeholder="(212) 555-0100">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-company">Company or ownership entity name <span class="req">*</span></label>
+        <input type="text" id="f-company" name="Company" required placeholder="Acme Real Estate LLC">
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-field">
+        <label for="f-address">Building address, city, and state <span class="req">*</span></label>
+        <input type="text" id="f-address" name="Building Address" required placeholder="123 Main St, Chicago, IL">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-type">Building type <span class="req">*</span></label>
+        <select id="f-type" name="Building Type" required>
+          <option value="" disabled selected>Select building type</option>
+          <option value="Commercial office">Commercial office</option>
+          <option value="Multifamily residential">Multifamily residential</option>
+          <option value="Mixed-use">Mixed-use</option>
+          <option value="Hotel">Hotel</option>
+          <option value="Retail">Retail</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="modal-field">
+        <label for="f-sqft">Gross square footage <span class="req">*</span></label>
+        <input type="text" id="f-sqft" name="Square Footage" required placeholder="e.g. 45,000">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-year">Year built <span class="req">*</span></label>
+        <input type="text" id="f-year" name="Year Built" required placeholder="e.g. 1987">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-bms">Does the building have a BMS? <span class="req">*</span></label>
+        <select id="f-bms" name="BMS" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes, modern">Yes, modern</option>
+          <option value="Yes, older system">Yes, older system</option>
+          <option value="No BMS present">No BMS present</option>
+          <option value="Not sure">Not sure</option>
+        </select>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-field">
+        <label for="f-electric">Monthly electric cost estimate</label>
+        <input type="text" id="f-electric" name="Monthly Electric Cost" placeholder="e.g. $8,000">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-gas">Monthly gas cost estimate</label>
+        <input type="text" id="f-gas" name="Monthly Gas Cost" placeholder="e.g. $3,500">
+      </div>
+
+      <div class="modal-field">
+        <label for="f-notices">Any local energy compliance notices received? <span class="req">*</span></label>
+        <select id="f-notices" name="Compliance Notices" required>
+          <option value="" disabled selected>Select an option</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="Not sure">Not sure</option>
+        </select>
+      </div>
+
+      <div class="modal-field">
+        <label for="f-report">Which report are you requesting? <span class="req">*</span></label>
+        <select id="f-report" name="Report Type" required>
+          <option value="" disabled selected>Select a report</option>
+          <option value="Building Snapshot - $497">Building Snapshot - $497</option>
+          <option value="Portfolio Benchmark - $1,997">Portfolio Benchmark - $1,997</option>
+          <option value="Deep-Dive Report - $4,997">Deep-Dive Report - $4,997</option>
+        </select>
+      </div>
+
+      <div class="modal-field">
+        <label for="f-notes">Anything else we should know?</label>
+        <textarea id="f-notes" name="Additional Notes" placeholder="Any context about your building, portfolio, or goals..."></textarea>
+      </div>
+
+      <div class="modal-checkbox">
+        <input type="checkbox" id="f-consent" name="Consent" value="Agreed" required>
+        <label for="f-consent">I understand Neuro will review my submission and send an invoice within one business day.</label>
+      </div>
+
+      <button type="submit" class="modal-submit" id="modal-submit-btn">Submit My Building Information</button>
+      <p class="modal-form-error" id="modal-error">Something went wrong. Please try again or email us directly.</p>
+
+    </form>
+  </div>
+</div>
 
 <script>
 const canvas = document.getElementById('network-canvas');
@@ -1320,6 +1636,67 @@ resize();
 init();
 draw();
 window.addEventListener('resize', () => { resize(); init(); });
+
+// ── MODAL ──
+const reportMap = {
+  snapshot: 'Building Snapshot - $497',
+  portfolio: 'Portfolio Benchmark - $1,997',
+  deepdive: 'Deep-Dive Report - $4,997'
+};
+
+function openModal(reportKey) {
+  const modal = document.getElementById('order-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (reportKey && reportMap[reportKey]) {
+    document.getElementById('f-report').value = reportMap[reportKey];
+  }
+  document.getElementById('modal-close').focus();
+}
+
+function closeModal() {
+  document.getElementById('order-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+
+document.getElementById('order-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+
+document.getElementById('order-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('modal-submit-btn');
+  const errEl = document.getElementById('modal-error');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  errEl.style.display = 'none';
+  try {
+    const res = await fetch(this.action, {
+      method: 'POST',
+      body: new FormData(this),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      closeModal();
+      this.reset();
+      const success = document.getElementById('hero-success');
+      success.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      errEl.style.display = 'block';
+    }
+  } catch (err) {
+    errEl.style.display = 'block';
+  }
+  btn.disabled = false;
+  btn.textContent = 'Submit My Building Information';
+});
 </script>
 </body>
 </html>
