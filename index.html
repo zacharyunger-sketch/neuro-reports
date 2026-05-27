@@ -694,6 +694,158 @@
     text-align: right;
   }
 
+  /* ── STAT EXAMPLE NOTE ── */
+  .stat-example {
+    font-size: 10px;
+    color: rgba(139,150,168,0.6);
+    line-height: 1.4;
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── COMPLIANCE MAP ── */
+  .compliance-section {
+    padding: 100px 32px;
+    background: rgba(0,8,20,0.6);
+  }
+
+  .compliance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto 24px;
+  }
+
+  .compliance-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .compliance-card-header {
+    padding: 14px 24px;
+    font-family: var(--font-cond);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .compliance-card-header.active {
+    background: rgba(245,130,31,0.08);
+    color: var(--orange);
+    border-bottom-color: rgba(245,130,31,0.2);
+  }
+
+  .compliance-card-header.coming {
+    background: rgba(0,212,255,0.06);
+    color: var(--cyan);
+    border-bottom-color: rgba(0,212,255,0.15);
+  }
+
+  .compliance-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .compliance-dot.active { background: var(--orange); }
+  .compliance-dot.coming { background: var(--cyan); opacity: 0.7; }
+
+  .compliance-list {
+    list-style: none;
+    padding: 8px 24px 16px;
+  }
+
+  .compliance-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+  }
+
+  .compliance-list li:last-child { border-bottom: none; }
+
+  .compliance-list .city { color: var(--white); font-weight: 600; white-space: nowrap; }
+  .compliance-list .law { color: var(--muted); font-size: 12px; text-align: right; }
+
+  .state-laws-block {
+    max-width: 1000px;
+    margin: 0 auto 28px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .state-laws-header {
+    padding: 14px 24px;
+    font-family: var(--font-cond);
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    background: rgba(0,212,255,0.06);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .state-laws-header::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--cyan);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .state-laws-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    list-style: none;
+    padding: 8px 24px 16px;
+    gap: 0 32px;
+  }
+
+  .state-laws-grid li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 14px;
+  }
+
+  .state-laws-grid li:nth-last-child(-n+2) { border-bottom: none; }
+
+  .compliance-note {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+    padding: 18px 24px;
+    border: 1px solid rgba(0,212,255,0.08);
+    border-radius: 6px;
+    background: rgba(0,212,255,0.03);
+  }
+
+  .compliance-note a { color: var(--orange); text-decoration: none; }
+  .compliance-note a:hover { text-decoration: underline; }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .pain-grid { grid-template-columns: 1fr; }
@@ -701,6 +853,10 @@
     .steps-grid { grid-template-columns: repeat(2, 1fr); }
     .steps-connector { display: none; }
     .hero-stats { grid-template-columns: 1fr; }
+    .compliance-grid { grid-template-columns: 1fr; }
+    .state-laws-grid { grid-template-columns: 1fr; }
+    .state-laws-grid li:nth-last-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .state-laws-grid li:last-child { border-bottom: none; }
     nav .nav-links { display: none; }
     .footer-inner { flex-direction: column; align-items: flex-start; }
     .footer-copy { text-align: left; }
@@ -732,24 +888,26 @@
   <div class="hero-inner">
     <div class="hero-eyebrow">Building Intelligence</div>
     <h1>Your building is<br><span class="accent">costing you money.</span><br>Find out exactly how much.</h1>
-    <p class="hero-sub">Neuro's Building Intelligence Reports expose your energy compliance fine exposure, energy waste, and missed savings — with a clear roadmap to fix it.</p>
+    <p class="hero-sub">Neuro's Building Intelligence Reports expose your energy compliance fine exposure, energy waste, and missed savings, with a clear roadmap to fix it.</p>
     <div class="hero-actions">
       <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Report</a>
       <a href="#reports" class="btn-outline">See Report Options</a>
+      <a href="INSERT_SAMPLE_URL" class="btn-outline">Download Sample Report</a>
     </div>
     <div class="hero-stats">
       <div class="stat-block">
-        <div class="stat-label">Current LL97 Fines</div>
+        <div class="stat-label">Annual Fine Exposure</div>
         <div class="stat-value">$66,900</div>
         <div class="stat-desc">Annual penalty exposure today</div>
+        <div class="stat-example">Example: NYC office building, 45,000 sqft</div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">Fines by 2030</div>
+        <div class="stat-label">Fines by Next Period</div>
         <div class="stat-value">$114,300</div>
         <div class="stat-desc">As thresholds tighten next cycle</div>
       </div>
       <div class="stat-block">
-        <div class="stat-label">vs. NYC Median</div>
+        <div class="stat-label">vs. Peer Buildings</div>
         <div class="stat-value">2.4×</div>
         <div class="stat-desc">Above median energy intensity</div>
       </div>
@@ -765,7 +923,7 @@
     <div class="section-header">
       <div class="section-tag">The Problem</div>
       <h2 class="section-title">Your building is bleeding<br><span class="accent">money and compliance risk.</span></h2>
-      <p class="section-subtitle">Most building owners nationwide have no idea what they're actually liable for — until a fine arrives.</p>
+      <p class="section-subtitle">Most building owners nationwide have no idea what they're actually liable for, until a fine arrives.</p>
     </div>
 
     <div class="pain-grid">
@@ -775,7 +933,7 @@
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
         <h3>Energy Compliance Fines Are Already Here</h3>
-        <p>Local energy compliance laws are penalizing buildings that exceed carbon emissions limits — every single year. Most owners don't know their current exposure or when the next threshold kicks in.</p>
+        <p>Local energy compliance laws are penalizing buildings that exceed carbon emissions limits, every single year. Most owners don't know their current exposure or when the next threshold kicks in.</p>
       </div>
 
       <div class="pain-card">
@@ -783,7 +941,7 @@
           <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
         <h3>Energy Waste You Can't See</h3>
-        <p>The average commercial building wastes <strong>30–40% of its energy</strong> through inefficient HVAC, poor controls, and equipment running on outdated schedules. Without a proper audit, that waste just compounds — invisibly.</p>
+        <p>The average commercial building wastes <strong>30–40% of its energy</strong> through inefficient HVAC, poor controls, and equipment running on outdated schedules. Without a proper audit, that waste just compounds, invisibly.</p>
       </div>
 
       <div class="pain-card">
@@ -791,7 +949,7 @@
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </div>
         <h3>The 2030 Cliff is Approaching</h3>
-        <p>Local compliance standards are tightening, with limits set to drop <strong>significantly over the next decade</strong>. Buildings that don't act now will face massive retrofit costs under deadline pressure — paying 3× more than those who plan ahead.</p>
+        <p>Local compliance standards are tightening, with limits set to drop <strong>significantly over the next decade</strong>. Buildings that don't act now will face massive retrofit costs under deadline pressure, paying 3× more than those who plan ahead.</p>
       </div>
 
       <div class="pain-card">
@@ -814,7 +972,7 @@
     <div class="section-header">
       <div class="section-tag">Report Options</div>
       <h2 class="section-title">Intelligence at every<br><span class="accent">scale and budget.</span></h2>
-      <p class="section-subtitle">From a single building snapshot to a full portfolio analysis — delivered in 5 business days.</p>
+      <p class="section-subtitle">From a single building snapshot to a full portfolio analysis, delivered in 5 business days.</p>
     </div>
 
     <div class="reports-grid">
@@ -822,7 +980,7 @@
       <!-- Snapshot -->
       <div class="report-card">
         <div class="report-header">
-          <div class="report-tier">Entry — Single Building</div>
+          <div class="report-tier">Entry: Single Building</div>
           <div class="report-name">Snapshot Report</div>
           <div class="report-tagline">Your building's energy profile, compliance fine exposure, and top 3 opportunities in 15 pages.</div>
         </div>
@@ -861,7 +1019,7 @@
       <div class="report-card featured">
         <div class="featured-badge">Most Popular</div>
         <div class="report-header">
-          <div class="report-tier">Portfolio — 2 to 20 Buildings</div>
+          <div class="report-tier">Portfolio: 2 to 20 Buildings</div>
           <div class="report-name">Portfolio Benchmark</div>
           <div class="report-tagline">Cross-portfolio comparison, ranked compliance fine exposure, and a capital prioritization plan.</div>
         </div>
@@ -903,9 +1061,9 @@
       <!-- Deep-Dive -->
       <div class="report-card">
         <div class="report-header">
-          <div class="report-tier">Premium — Single Building</div>
+          <div class="report-tier">Premium: Single Building</div>
           <div class="report-name">Deep-Dive Report</div>
-          <div class="report-tagline">ASHRAE Level 2 equivalent — contractor-ready specs, full financial model, performance contract framework.</div>
+          <div class="report-tagline">ASHRAE Level 2 equivalent: contractor-ready specs, full financial model, performance contract framework.</div>
         </div>
         <div class="report-price-block">
           <div class="report-price">$4,997</div>
@@ -992,11 +1150,79 @@
 
 <div class="section-divider"></div>
 
+<!-- COMPLIANCE MAP -->
+<section class="compliance-section section" id="compliance-map">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Compliance Landscape</div>
+      <h2 class="section-title">Building energy compliance laws<br><span class="accent">across the US.</span></h2>
+      <p class="section-subtitle">Cities and states are rapidly adopting building performance standards with real financial penalties.</p>
+    </div>
+
+    <div class="compliance-grid">
+
+      <div class="compliance-card">
+        <div class="compliance-card-header active">
+          <span class="compliance-dot active"></span>
+          Active Laws with Fines
+        </div>
+        <ul class="compliance-list">
+          <li><span class="city">New York City</span><span class="law">Local Law 97</span></li>
+          <li><span class="city">Boston, MA</span><span class="law">BERDO</span></li>
+          <li><span class="city">Washington, DC</span><span class="law">BEPS</span></li>
+          <li><span class="city">Los Angeles, CA</span><span class="law">LA Building Performance Standard</span></li>
+          <li><span class="city">Seattle, WA</span><span class="law">BEPS</span></li>
+          <li><span class="city">Denver, CO</span><span class="law">Energize Denver</span></li>
+          <li><span class="city">Philadelphia, PA</span><span class="law">Building Energy Performance Program</span></li>
+          <li><span class="city">St. Louis, MO</span><span class="law">BEPS</span></li>
+          <li><span class="city">Kansas City, MO</span><span class="law">Building Energy Benchmarking</span></li>
+        </ul>
+      </div>
+
+      <div class="compliance-card">
+        <div class="compliance-card-header coming">
+          <span class="compliance-dot coming"></span>
+          Benchmarking Required: Performance Standards Coming
+        </div>
+        <ul class="compliance-list">
+          <li><span class="city">Chicago, IL</span><span class="law">BEPS</span></li>
+          <li><span class="city">San Francisco, CA</span><span class="law">Existing Buildings Energy Performance Ordinance</span></li>
+          <li><span class="city">Atlanta, GA</span><span class="law">Commercial Benchmarking</span></li>
+          <li><span class="city">Minneapolis, MN</span><span class="law">Building Benchmarking</span></li>
+          <li><span class="city">Orlando, FL</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Salt Lake City, UT</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Cincinnati, OH</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Pittsburgh, PA</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">San Jose, CA</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Portland, OR</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Cambridge, MA</span><span class="law">Benchmarking</span></li>
+          <li><span class="city">Columbus, OH</span><span class="law">Benchmarking</span></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="state-laws-block">
+      <div class="state-laws-header">State Laws</div>
+      <ul class="state-laws-grid">
+        <li><span class="city">New York State</span><span class="law">CLCPA</span></li>
+        <li><span class="city">California</span><span class="law">Title 24</span></li>
+        <li><span class="city">Washington State</span><span class="law">Clean Buildings Act</span></li>
+        <li><span class="city">Massachusetts</span><span class="law">Stretch Energy Code</span></li>
+      </ul>
+    </div>
+
+    <p class="compliance-note">Don't see your city? <a href="https://tally.so/r/GxQVXk">Contact us.</a> Local requirements may still apply to your building.</p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
 <!-- FINAL CTA -->
 <section class="cta-section section">
   <div class="cta-box">
     <h2>Stop guessing.<br><span style="color: var(--orange);">Start knowing.</span></h2>
-    <p>Every month without a report is another month paying fines you might not owe — or missing savings that are sitting right inside your building.</p>
+    <p>Every month without a report is another month paying fines you might not owe, or missing savings that are sitting right inside your building.</p>
     <a href="https://tally.so/r/GxQVXk" class="btn-primary">Order Your Building Intelligence Report</a>
   </div>
 </section>
