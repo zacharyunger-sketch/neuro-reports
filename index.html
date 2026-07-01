@@ -1561,6 +1561,16 @@
       <p class="modal-form-error" id="modal-error">Something went wrong. Please try again or email us directly.</p>
 
     </form>
+
+    <div id="modal-confirmation" style="display:none; text-align:center; padding: 20px 0 8px;">
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(245,130,31,0.12);border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M5 14l7 7L23 8" stroke="#F5821F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3 style="font-family:var(--font-cond);font-weight:800;font-size:26px;text-transform:uppercase;color:var(--white);margin-bottom:12px;">Submission Received</h3>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:400px;margin:0 auto 32px;">Thank you! We'll review your building information and send an invoice within <strong style="color:var(--off-white);">one business day</strong>. Check your inbox for next steps.</p>
+      <button onclick="closeModal()" class="modal-submit" style="max-width:260px;margin:0 auto;display:block;">Close</button>
+    </div>
+
   </div>
 </div>
 
@@ -1646,7 +1656,11 @@ const reportMap = {
 
 function openModal(reportKey) {
   const modal = document.getElementById('order-modal');
+  document.getElementById('order-form').style.display = 'block';
+  document.getElementById('modal-confirmation').style.display = 'none';
+  document.getElementById('modal-close').style.display = 'block';
   modal.classList.add('open');
+  modal.scrollTop = 0;
   document.body.style.overflow = 'hidden';
   if (reportKey && reportMap[reportKey]) {
     document.getElementById('f-report').value = reportMap[reportKey];
@@ -1683,11 +1697,11 @@ document.getElementById('order-form').addEventListener('submit', async function(
       headers: { 'Accept': 'application/json' }
     });
     if (res.ok) {
-      closeModal();
       this.reset();
-      const success = document.getElementById('hero-success');
-      success.style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.style.display = 'none';
+      document.getElementById('modal-confirmation').style.display = 'block';
+      document.getElementById('modal-close').style.display = 'none';
+      document.getElementById('order-modal').scrollTop = 0;
     } else {
       errEl.style.display = 'block';
     }
